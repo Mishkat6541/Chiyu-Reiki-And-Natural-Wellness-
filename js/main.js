@@ -1,14 +1,8 @@
-/* ════════════════════════════════════════════════
-   CHIYU REIKI & NATURAL WELLNESS — Main JS
-   ════════════════════════════════════════════════ */
-
 'use strict';
 
-/* ── Year ──────────────────────────────────────── */
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-/* ── Sticky header ─────────────────────────────── */
 const header = document.getElementById('site-header');
 
 function updateHeader() {
@@ -21,7 +15,6 @@ function updateHeader() {
 window.addEventListener('scroll', updateHeader, { passive: true });
 updateHeader();
 
-/* ── Mobile burger ─────────────────────────────── */
 const burger   = document.getElementById('nav-burger');
 const navLinks = document.getElementById('nav-links');
 
@@ -32,7 +25,6 @@ burger.addEventListener('click', () => {
   document.body.style.overflow = isOpen ? 'hidden' : '';
 });
 
-// Close on nav link click
 navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => {
     navLinks.classList.remove('open');
@@ -42,7 +34,6 @@ navLinks.querySelectorAll('a').forEach(link => {
   });
 });
 
-/* ── Scroll-reveal ─────────────────────────────── */
 const revealEls = document.querySelectorAll('.reveal, .fade-up');
 
 const revealObserver = new IntersectionObserver(
@@ -59,47 +50,38 @@ const revealObserver = new IntersectionObserver(
 
 revealEls.forEach(el => revealObserver.observe(el));
 
-/* ── Lazy-load images & graceful fallback ──────── */
 function initImages() {
   const images = document.querySelectorAll('img[src]');
-
   images.forEach(img => {
     if (img.complete && img.naturalWidth > 0) {
       img.classList.add('loaded');
       return;
     }
-
     img.addEventListener('load', () => img.classList.add('loaded'));
     img.addEventListener('error', () => {
-      // Image failed to load — hide it so the placeholder bg shows through
       img.style.opacity = '0';
     });
   });
 }
 initImages();
 
-/* ── Smooth anchor scrolling (offset for fixed header) ── */
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', (e) => {
     const target = document.querySelector(anchor.getAttribute('href'));
     if (!target) return;
     e.preventDefault();
-
     const offset = header.offsetHeight + 16;
-    const top    = target.getBoundingClientRect().top + window.scrollY - offset;
-
+    const top = target.getBoundingClientRect().top + window.scrollY - offset;
     window.scrollTo({ top, behavior: 'smooth' });
   });
 });
 
-/* ── Contact form (client-side feedback only) ──── */
 const form = document.getElementById('contact-form');
 
 if (form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    // Basic validation
     const name    = form.name.value.trim();
     const email   = form.email.value.trim();
     const message = form.message.value.trim();
@@ -114,10 +96,9 @@ if (form) {
       return;
     }
 
-    // Simulate submission (replace with actual back-end / Formspree / Netlify Forms etc.)
     const btn = form.querySelector('button[type="submit"]');
     btn.textContent = 'Sending…';
-    btn.disabled    = true;
+    btn.disabled = true;
 
     setTimeout(() => {
       showFormMessage(
@@ -126,13 +107,12 @@ if (form) {
       );
       form.reset();
       btn.textContent = 'Send Message';
-      btn.disabled    = false;
+      btn.disabled = false;
     }, 1200);
   });
 }
 
 function showFormMessage(text, type) {
-  // Remove any existing message
   const existing = form.querySelector('.form__msg');
   if (existing) existing.remove();
 
@@ -146,7 +126,7 @@ function showFormMessage(text, type) {
     margin-top: 0.75rem;
     text-align: center;
     background: ${type === 'success' ? '#edf5ea' : '#fdf0f0'};
-    color:      ${type === 'success' ? '#3a6b32' : '#8b2525'};
+    color: ${type === 'success' ? '#3a6b32' : '#8b2525'};
     border: 1px solid ${type === 'success' ? '#b8d9b2' : '#f0b8b8'};
   `;
   form.appendChild(msg);
@@ -156,7 +136,6 @@ function showFormMessage(text, type) {
   }
 }
 
-/* ── Active nav link on scroll ─────────────────── */
 const sections   = document.querySelectorAll('section[id], div[id]');
 const navAnchors = document.querySelectorAll('.nav__link');
 
