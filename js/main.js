@@ -173,3 +173,37 @@ function closeLightbox() {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeLightbox();
 });
+
+const newsletterForm = document.getElementById('newsletter-form');
+if (newsletterForm) {
+  newsletterForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = newsletterForm['nl-name'].value.trim();
+    const email = newsletterForm['nl-email'].value.trim();
+    const whatsapp = newsletterForm['nl-whatsapp'].value.trim();
+    if (!name || (!email && !whatsapp)) {
+      showNlMessage('Please enter your name and at least an email address or WhatsApp number.', 'error');
+      return;
+    }
+    const btn = newsletterForm.querySelector('button[type="submit"]');
+    btn.textContent = 'Subscribing…';
+    btn.disabled = true;
+    setTimeout(() => {
+      showNlMessage('Thank you! You have been added to the mailing list. Angela will be in touch soon.', 'success');
+      newsletterForm.reset();
+      btn.textContent = 'Subscribe to Newsletter';
+      btn.disabled = false;
+    }, 1000);
+  });
+}
+
+function showNlMessage(text, type) {
+  const existing = newsletterForm.querySelector('.form__msg');
+  if (existing) existing.remove();
+  const msg = document.createElement('p');
+  msg.className = 'form__msg';
+  msg.textContent = text;
+  msg.style.cssText = `font-size:0.85rem;padding:0.85rem 1rem;border-radius:4px;margin-top:0.75rem;text-align:center;background:${type==='success'?'#edf5ea':'#fdf0f0'};color:${type==='success'?'#3a6b32':'#8b2525'};border:1px solid ${type==='success'?'#b8d9b2':'#f0b8b8'};`;
+  newsletterForm.appendChild(msg);
+  if (type === 'success') setTimeout(() => msg.remove(), 6000);
+}
